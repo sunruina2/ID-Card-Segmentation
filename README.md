@@ -13,6 +13,13 @@ Segmentation of ID Cards using U-Net
 - Keras 2.1
 - OpenCV 3.4.5
 - Numpy 1.16
+- pip install Keras==2.3.1
+- pip install Keras-Applications==1.0.8
+- pip install Keras-Preprocessing==1.1.0
+- pip install tensorboard==1.14.0
+- pip install tensorflow==1.14.0
+- pip install tensorflow-estimator==1.14.0
+- pip install tensorflow-tensorboard==0.1.5
 
 ### Dataset
 - Download Dataset

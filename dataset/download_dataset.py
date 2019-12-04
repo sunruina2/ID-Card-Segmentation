@@ -8,14 +8,14 @@ import os
 import shutil
 import cv2
 import json
-import numpy as np 
+import numpy as np
 from glob import glob
 
 all_links = ['ftp://smartengines.com/midv-500/dataset/01_alb_id.zip',
              'ftp://smartengines.com/midv-500/dataset/02_aut_drvlic_new.zip',
              'ftp://smartengines.com/midv-500/dataset/03_aut_id_old.zip',
              'ftp://smartengines.com/midv-500/dataset/04_aut_id.zip',
-             'ftp://smartengines.com/midv-500/dataset/05_aze_passport.zip', 
+             'ftp://smartengines.com/midv-500/dataset/05_aze_passport.zip',
              'ftp://smartengines.com/midv-500/dataset/06_bra_passport.zip',
              'ftp://smartengines.com/midv-500/dataset/07_chl_id.zip',
              'ftp://smartengines.com/midv-500/dataset/08_chn_homereturn.zip',
@@ -62,17 +62,18 @@ all_links = ['ftp://smartengines.com/midv-500/dataset/01_alb_id.zip',
              'ftp://smartengines.com/midv-500/dataset/49_usa_ssn82.zip',
              'ftp://smartengines.com/midv-500/dataset/50_xpo_id.zip']
 
+
 def read_image(img, label):
     image = cv2.imread(img)
     mask = np.zeros(image.shape, dtype=np.uint8)
     quad = json.load(open(label, 'r'))
     coords = np.array(quad['quad'], dtype=np.int32)
-    cv2.fillPoly(mask, coords.reshape(-1, 4, 2), color=(255,255,255))
+    cv2.fillPoly(mask, coords.reshape(-1, 4, 2), color=(255, 255, 255))
     mask = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
-    mask = cv2.resize(mask, (mask.shape[1]//2, mask.shape[0]//2))
-    image = cv2.resize(image, (image.shape[1]//2, image.shape[0]//2))
-    mask = cv2.threshold(mask, 0,255, cv2.THRESH_BINARY)[1]
-    mask = cv2.resize(mask, (256,256))
+    mask = cv2.resize(mask, (mask.shape[1] // 2, mask.shape[0] // 2))
+    image = cv2.resize(image, (image.shape[1] // 2, image.shape[0] // 2))
+    mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY)[1]
+    mask = cv2.resize(mask, (256, 256))
     image = cv2.resize(image, (256, 256))
     return image, mask
 
@@ -116,6 +117,7 @@ def main():
         print('----------------------------------------------------------------------')
         os.remove(link[40:])
         shutil.rmtree(link[40:].replace('.zip', ''))
+
 
 if __name__ == '__main__':
     main()
