@@ -84,7 +84,7 @@ def read_image(img, label):
     #  [1004  624] 右上
     #  [1019 1307] 右下
     #  [  32 1281]] 左下
-    cv2.fillPoly(mask, coords.reshape(-1, 4, 2), color=(255, 255, 255))  # 扩维，填充
+    cv2.fillPoly(mask, coords.reshape(-1, 4, 2), color=(255, 255, 255))  # 扩维
     # [[[  77  640]
     #   [1004  624]
     #   [1019 1307]
@@ -136,8 +136,8 @@ def main():
         # time.sleep(5)
         X = []
         Y = []
-        # os.remove(imgdir_path + link[40:].replace('.zip', '.tif'))
-        # os.remove(crddir_path + link[40:].replace('.zip', '.json'))
+        os.remove(imgdir_path + link[40:].replace('.zip', '.tif'))
+        os.remove(crddir_path + link[40:].replace('.zip', '.json'))
         dict_path = zip(sorted(os.listdir(imgdir_path)), sorted(os.listdir(crddir_path)))
         for images, ground_truth in dict_path:
             img_list = sorted(glob(imgdir_path + images + '/*.tif'))
@@ -147,9 +147,9 @@ def main():
                 X.append(image)
                 Y.append(mask)
 
-        X = np.array(X)  # <class 'tuple'>: (60, 256, 256, 3)
-        Y = np.array(Y)  # <class 'tuple'>: (60, 256, 256)
-        Y = np.expand_dims(Y, axis=3)  # 在0、1、2、3，3=第四维上扩维，<class 'tuple'>: (60, 256, 256, 1)
+        X = np.array(X)
+        Y = np.array(Y)
+        Y = np.expand_dims(Y, axis=3)
         print(link[40:].replace('.zip', ''), X.shape, Y.shape)
         np.save('train_image' + str(i) + '.npy', X)
         np.save('mask_image' + str(i) + '.npy', Y)

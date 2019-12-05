@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from .unet_model import get_model
-
+b_size = 80
 X = np.load('final_train.npy')
 Y = np.load('final_mask.npy')
 
@@ -49,8 +49,8 @@ model_chkpt = ModelCheckpoint('unet_model_whole_100epochs.h5',
                               monitor='val_loss', verbose=1,
                               save_best_only=True)
 
-history = model.fit_generator(generator=t_generator(X_train, Y_train, 50),
-                              steps_per_epoch=X_train.shape[0] // 50,
+history = model.fit_generator(generator=t_generator(X_train, Y_train, b_size),
+                              steps_per_epoch=X_train.shape[0] // b_size,
                               epochs=100, callbacks=[tb, model_chkpt],
-                              validation_data=v_generator(X_val, Y_val, 50),
-                              validation_steps=X_val.shape[0] // 50)
+                              validation_data=v_generator(X_val, Y_val, b_size),
+                              validation_steps=X_val.shape[0] // b_size)
