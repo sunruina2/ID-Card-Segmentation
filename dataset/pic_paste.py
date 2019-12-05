@@ -76,8 +76,8 @@ if __name__ == "__main__":
 
     '''将身份证原图进行一定范围的透视变换，输入输出大小不变(560, 880, 3)，保存变换后的点，留白置为黑色'''
 
-    # all_crop_pt = '/Users/finup/Desktop/图像语义分割/all_crop_id'
-    all_crop_pt = '/data/sunruina/img_segment/all_crop_id'
+    all_crop_pt = '/Users/finup/Desktop/图像语义分割/all_crop_id'
+    # all_crop_pt = '/data/sunruina/img_segment/all_crop_id'
     all_crop_pt_trans = all_crop_pt + '_trans'
     try:
         os.mkdir(all_crop_pt_trans)
@@ -85,15 +85,14 @@ if __name__ == "__main__":
         pass
 
     crop_lst = sorted(os.listdir(all_crop_pt))
-    for crop_pt in crop_lst:
-        if crop_pt.split('.')[-1] != '.DS_Store':
-            print(crop_pt)
+    all_n = len(crop_lst)
+    for i in range(all_n):
+        if crop_lst[i].split('.')[-1] != '.DS_Store':
+            if i % 10 == 0:
+                print(all_n, i, np.round(i / all_n, 2))
             # 先确定图片的四个顶点的坐标：
-
-            crop_img = cv2.imread(all_crop_pt + '/' + crop_pt)
-
+            crop_img = cv2.imread(all_crop_pt + '/' + crop_lst[i])
             h, w = crop_img.shape[:2]
-
             pts = np.float32([[0, 0], [0, h - 1], [w - 1, h - 1], [w - 1, 0]])
             # 逆时针 4点
             # [0, 0] 左上
@@ -105,13 +104,9 @@ if __name__ == "__main__":
             r8s = '_'.join(r8s)
             pts1 = np.float32([[0 + r8[0], 0 + r8[1]], [0 + r8[2], h - 1 - r8[3]], [w - 1 - r8[4], h - 1 - r8[5]],
                                [w - 1 - r8[6], 0 + r8[7]]])
-            print(pts)
-            print(pts1)
             M = cv2.getPerspectiveTransform(pts, pts1)
             dst = cv2.warpPerspective(crop_img, M, (w, h))
-            cv2.imwrite(all_crop_pt_trans + '/' + crop_pt.replace('_crop.jpg', '@'+r8s+'.jpg'), dst)
-
-
+            cv2.imwrite(all_crop_pt_trans + '/' + crop_lst[i].replace('_crop.jpg', '@' + r8s + '.jpg'), dst)
 
     '''读取狒狒身份证crop'''
     # bk_path = '/Users/finup/Desktop/图像语义分割/train2017_s'
