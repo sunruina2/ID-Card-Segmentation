@@ -3,9 +3,11 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from .unet_model import get_model
-b_size = 80
-X = np.load('final_train.npy')
-Y = np.load('final_mask.npy')
+
+b_size = 64
+data_pt = '/data/sunruina/img_segment/all_crop_id_trans_paste_npy/'
+X = np.load(data_pt + 'final_train.npy')
+Y = np.load(data_pt + 'final_mask.npy')
 
 
 def t_generator(X_train, Y_train, batch_size):
