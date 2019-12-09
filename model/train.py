@@ -1,8 +1,11 @@
-import cv2
 import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from unet_model import get_model
+from keras.utils import multi_gpu_model
+
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "2,3"
 
 b_size = 64
 # data_pt = '/data/sunruina/img_segment/all_crop_id_trans_paste_npy/'
@@ -44,7 +47,7 @@ del X, Y
 X_train, X_val, Y_train, Y_val = train_test_split(X_train, Y_train, shuffle=True, random_state=265, test_size=0.1)
 
 model = get_model()
-
+parallel_model = multi_gpu_model(model, gpus=2)
 ## Adding Callbacks
 tb = TensorBoard(log_dir='./logs/', batch_size=8, write_graph=True)
 
