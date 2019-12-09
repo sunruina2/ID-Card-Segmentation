@@ -79,8 +79,8 @@ if __name__ == "__main__":
     # all_crop_pt = '/Users/finup/Desktop/图像语义分割/all_crop_id'
     # bk_path = '/Users/finup/Desktop/图像语义分割/train2017_s/'
 
-    all_crop_pt = '/Users/finup/Desktop/图像语义分割/all_crop_id'
-    bk_path = '/Users/finup/Desktop/图像语义分割/train2017_s/'
+    all_crop_pt = '/data/sunruina/img_segment/all_crop_id_s'
+    bk_path = '/data/sunruina/img_segment/train2017_s/'
 
     all_crop_pt_trans = all_crop_pt + '_trans'
     try:
