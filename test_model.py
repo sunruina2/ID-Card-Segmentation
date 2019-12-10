@@ -12,8 +12,8 @@ def min_rect(p_name, img, img_origin):
     contours, hier = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     for c in contours:
-        # find minimum area
         rect = cv2.minAreaRect(c)
+
         # calculate coordinates of the minimum area rectangle
         box = cv2.boxPoints(rect)
         # normalize coordinates to integers
@@ -25,7 +25,7 @@ def min_rect(p_name, img, img_origin):
         box = np.reshape(box, (8,))
         r8s = [str(int(i)) for i in box]
         r8s = '_'.join(r8s)
-        cv2.imwrite(pic_res_path + p_name + '_res@' + r8s + '.jpg', img_origin_draw)
+        cv2.imwrite(pic_res_path + p_name + '_mask_rect@' + r8s + '.jpg', img_origin_draw)
 
         # 旋转
         width = int(rect[1][0])
@@ -49,13 +49,14 @@ def min_rect(p_name, img, img_origin):
 
 
 class UNetIdCard():
-    def __init__(self):
-        self.epoch_n = '_27'
+    def __init__(self, epoch_n='_27'):
+        self.epoch_n = epoch_n
         self.model = load_model('unet_model_whole_100epochs' + self.epoch_n + '.h5', compile=False)
         self.model.compile(optimizer=Adam(1e-4), loss=IoU, metrics=['binary_accuracy'])
 
     def pre(self, image_name):
         img_origin = cv2.imread(pic_path + image_name + '.jpg')
+        cv2.imwrite(pic_res_path + image_name + '_origin.jpg', img_origin)
         img = img_origin.copy()
         h, w = img.shape[:2]
         img = cv2.resize(img, (256, 256))
@@ -80,23 +81,25 @@ class UNetIdCard():
 
 
 if __name__ == '__main__':
-    m = UNetIdCard()
-    pic_path = '/Users/finup/Desktop/图像语义分割/ID-Card-Segmentation/test_imgs/'
-    pic_res_path = pic_path + 'imgs_res/'
-    try:
-        os.mkdir(pic_res_path)
-    except:
-        pass
+    for model_i in ['_4', '_21', '_27', '_git', ]:
+        m = UNetIdCard(epoch_n=model_i)
+        pic_path = '/Users/finup/Desktop/图像语义分割/ID-Card-Segmentation/test_imgs/'
+        pic_res_path = pic_path + 'imgs_res' + model_i + '/'
+        try:
+            os.mkdir(pic_res_path)
+        except:
+            pass
 
-    pic_list = sorted(os.listdir(pic_path))
-    pic_names = []
-    for i in pic_list:
-        name_s = i.split('.')
-        if name_s[-1] == 'jpg':
-            pic_names.append(name_s[0])
+        pic_list = sorted(os.listdir(pic_path))
+        pic_names = []
+        print('每张图片执行时间(单位s):')
+        for i in pic_list:
+            name_s = i.split('.')
+            if name_s[-1] == 'jpg':
+                pic_names.append(name_s[0])
 
-    for i in pic_names:
-        start = time.time()
-        m.pre(i)
-        end = time.time()
-        print(end - start)
+        for i in pic_names:
+            start = time.time()
+            m.pre(i)
+            end = time.time()
+            print(end - start)
