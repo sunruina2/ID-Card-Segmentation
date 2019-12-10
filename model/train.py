@@ -48,7 +48,7 @@ model = get_model()
 ## Adding Callbacks
 tb = TensorBoard(log_dir='./logs/', batch_size=8, write_graph=True)
 
-model_chkpt = ModelCheckpoint('unet_model_whole_100epochs.h5',
+model_chkpt = ModelCheckpoint('unet_model_whole_100epochs_git.h5',
                               monitor='val_loss', verbose=1,
                               save_best_only=True)
 
